@@ -217,63 +217,79 @@ void move_rect(std::string cmd, int *x1, int *x2, int *y1, int *y2, int first_fr
  switch(first_free)	{
 
 	case 0:
-		if(x1n<0)
+		if(x1n<0) {
 			x1n=0;
 			x2n=40;
-		if(x2n>319)
+		}
+		if(x2n>319) {
 			x2n=319;
 			x1n=279;
-		if(y1n<0)
+		}
+		if(y1n<0) {
 			y1n=0;
 			y2n=40;
-		if(y2n>239)
+		}
+		if(y2n>239){
 			y2n=239;
 			y1n=199;
+		}
 		break;
 
 	case 1:
-                if(x1n<319)
+                if(x1n<319){
                         x1n=319;
 			x2n=359;
-                if(x2n>639)
+		}
+                if(x2n>639){
                         x2n=639;
 			x1n=599;
-                if(y1n<0)
+               }
+		 if(y1n<0) {
                         y1n=0;
 			y2n=40;
-                if(y2n>239)
+		}
+                if(y2n>239) {
                         y2n=239;
 			y1n=199;
+		}
                 break;
 
 	case 2:
-                if(x1n<0)
+                if(x1n<0) {
                         x1n=0;
 			x2n=40;
-                if(x2n>319)
+		}
+                if(x2n>319) {
                         x2n=319;
 			x1n=279;
-                if(y1n<239)
+		}
+                if(y1n<239){
                         y1n=239;
 			y2n=279;
-                if(y2n>479)
+		}
+                if(y2n>479) {
                         y2n=479;
 			y1n=439;
-                break;
+               }
+		 break;
 
 	case 3:
-                if(x1n<319)
+                if(x1n<319) {
                         x1n=319;
 			x2n=359;
-                if(x2n>639)
+		}
+                if(x2n>639) {
                         x2n=639;
 			x1n=599;
-                if(y1n<239)
+        	}
+	        if(y1n<239) {
                         y1n=239;
 			y2n=279;
-                if(y2n>479)
+		}
+                if(y2n>479) {
                         y2n=479;
 			y1n=439;
+		}
                 break;
 
 }

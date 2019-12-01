@@ -187,7 +187,7 @@ void erase_square(int x1, int x2, int y1, int y2) {
   }
 }
 
-void move_rect(std::string cmd, int *x1, int *x2, int *y1, int *y2) {
+void move_rect(std::string cmd, int *x1, int *x2, int *y1, int *y2, int first_free) {
 
   int x1n = *x1;
   int x2n = *x2;
@@ -213,6 +213,71 @@ void move_rect(std::string cmd, int *x1, int *x2, int *y1, int *y2) {
     x1n += 10;
     x2n += 10;
   }
+
+ switch(first_free)	{
+
+	case 0:
+		if(x1n<0)
+			x1n=0;
+			x2n=40;
+		if(x2n>319)
+			x2n=319;
+			x1n=279;
+		if(y1n<0)
+			y1n=0;
+			y2n=40;
+		if(y2n>239)
+			y2n=239;
+			y1n=199;
+		break;
+
+	case 1:
+                if(x1n<319)
+                        x1n=319;
+			x2n=359;
+                if(x2n>639)
+                        x2n=639;
+			x1n=599;
+                if(y1n<0)
+                        y1n=0;
+			y2n=40;
+                if(y2n>239)
+                        y2n=239;
+			y1n=199;
+                break;
+
+	case 2:
+                if(x1n<0)
+                        x1n=0;
+			x2n=40;
+                if(x2n>319)
+                        x2n=319;
+			x1n=279;
+                if(y1n<239)
+                        y1n=239;
+			y2n=279;
+                if(y2n>479)
+                        y2n=479;
+			y1n=439;
+                break;
+
+	case 3:
+                if(x1n<319)
+                        x1n=319;
+			x2n=359;
+                if(x2n>639)
+                        x2n=639;
+			x1n=599;
+                if(y1n<239)
+                        y1n=239;
+			y2n=279;
+                if(y2n>479)
+                        y2n=479;
+			y1n=439;
+                break;
+
+}
+
 
   erase_square(*x1, *x2, *y1, *y2);
   square(x1n, x2n, y1n, y2n);
@@ -313,7 +378,22 @@ int main() {
             y1 = (480 / 4) - 20;
             y2 = (480 / 4) + 20;
           }
+		
+	else if(first_free==2) {
 
+            x1 =  (640/4)-20; // na osnovu first_free
+            x2 =  (640/4)+20;
+            y1 =  360-20;
+            y2 =  360+20;
+          }
+
+	else if(first_free==3) {
+
+            x1 = 480 - 20; // na osnovu first_free
+            x2 = 480 + 20;
+            y1 = 360-20;
+            y2 = 360+20;
+          }
 
             std::cout << "main x1: " << x1 << " x2: " << x2 << " y1: "
                     << y1 << " y2: " << y2 << "\n";
@@ -327,7 +407,7 @@ int main() {
             cmd = sock_read(newsockfd);
             std::cout << "Section: " << sec_n_to_str(first_free)
                       << " cmd: " << cmd << "\n";
-            move_rect(cmd, &x1, &x2, &y1, &y2);
+            move_rect(cmd, &x1, &x2, &y1, &y2, first_free);
             std::cout << "main x1: " << x1 << " x2: " << x2 << " y1: " << y1
                       << " y2: " << y2 << "\n";
             // move_rect(&frame, first_free, cmd, &x_off, &y_off);

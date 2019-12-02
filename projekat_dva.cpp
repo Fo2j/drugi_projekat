@@ -1,3 +1,4 @@
+#include <errno.h>
 #include <arpa/inet.h>
 #include <asm-generic/socket.h>
 #include <dirent.h>
@@ -87,8 +88,8 @@ void background_write() {
   for (int y = 0; y < 480; y++) {
 
     for (int x = 0; x < 640; x++) {
-      // fp = fopen("/dev/vga_dma", "w");
-      fp = fopen("/tmp/vga_buffer", "w");
+      fp = fopen("/dev/vga_dma", "w");
+     // fp = fopen("/tmp/vga_buffer", "w");
       if (fp == NULL) {
         printf("Cannot open /dev/vga for write\n");
         exit(EXIT_FAILURE);
@@ -106,8 +107,8 @@ void background_write() {
 void horizontal_write() {
   FILE *fp;
   for (int x = 0; x < 640; x++) {
-    // fp = fopen("/dev/vga_dma", "w");
-    fp = fopen("/tmp/vga_buffer", "w");
+    fp = fopen("/dev/vga_dma", "w");
+    //fp = fopen("/tmp/vga_buffer", "w");
     if (fp == NULL) {
       printf("Cannot open /dev/vga for write\n");
       exit(EXIT_FAILURE);
@@ -125,8 +126,8 @@ void horizontal_write() {
 void vertical_write() {
   FILE *fp;
   for (int y = 0; y < 480; y++) {
-    // fp = fopen("/dev/vga_dma", "w");
-    fp = fopen("/tmp/vga_buffer", "w");
+    fp = fopen("/dev/vga_dma", "w");
+    //fp = fopen("/tmp/vga_buffer", "w");
     if (fp == NULL) {
       printf("Cannot open /dev/vga for write\n");
       exit(EXIT_FAILURE);
@@ -147,8 +148,8 @@ void square(int x1, int x2, int y1, int y2) {
 
   for (int y = y1; y < y2; y++) {
     for (int x = x1; x < x2; x++) {
-      // fp = fopen("/dev/vga_dma", "w");
-      fp = fopen("/tmp/vga_buffer", "w");
+      fp = fopen("/dev/vga_dma", "w");
+      //fp = fopen("/tmp/vga_buffer", "w");
       if (fp == NULL) {
         printf("Cannot open /dev/vga for write\n");
         exit(EXIT_FAILURE);
@@ -170,8 +171,8 @@ void erase_square(int x1, int x2, int y1, int y2) {
 
   for (int y = y1; y < y2; y++) {
     for (int x = x1; x < x2; x++) {
-      // fp = fopen("/dev/vga_dma", "w");
-      fp = fopen("/tmp/vga_buffer", "w");
+      fp = fopen("/dev/vga_dma", "w");
+      //fp = fopen("/tmp/vga_buffer", "w");
       if (fp == NULL) {
         printf("Cannot open /dev/vga for write\n");
         exit(EXIT_FAILURE);
@@ -213,6 +214,8 @@ void move_rect(std::string cmd, int *x1, int *x2, int *y1, int *y2, int first_fr
     x1n += 10;
     x2n += 10;
   }
+ 	
+
 
  switch(first_free)	{
 
@@ -236,9 +239,9 @@ void move_rect(std::string cmd, int *x1, int *x2, int *y1, int *y2, int first_fr
 		break;
 
 	case 1:
-                if(x1n<319){
-                        x1n=319;
-			x2n=359;
+                if(x1n<320){
+                        x1n=320;
+			x2n=360;
 		}
                 if(x2n>639){
                         x2n=639;
@@ -263,9 +266,9 @@ void move_rect(std::string cmd, int *x1, int *x2, int *y1, int *y2, int first_fr
                         x2n=319;
 			x1n=279;
 		}
-                if(y1n<239){
-                        y1n=239;
-			y2n=279;
+                if(y1n<240){
+                        y1n=240;
+			y2n=280;
 		}
                 if(y2n>479) {
                         y2n=479;
@@ -274,17 +277,17 @@ void move_rect(std::string cmd, int *x1, int *x2, int *y1, int *y2, int first_fr
 		 break;
 
 	case 3:
-                if(x1n<319) {
-                        x1n=319;
-			x2n=359;
+                if(x1n<320) {
+                        x1n=320;
+			x2n=360;
 		}
                 if(x2n>639) {
                         x2n=639;
 			x1n=599;
         	}
-	        if(y1n<239) {
-                        y1n=239;
-			y2n=279;
+	        if(y1n<240) {
+                        y1n=240;
+			y2n=280;
 		}
                 if(y2n>479) {
                         y2n=479;
@@ -296,7 +299,10 @@ void move_rect(std::string cmd, int *x1, int *x2, int *y1, int *y2, int first_fr
 
 
   erase_square(*x1, *x2, *y1, *y2);
-  square(x1n, x2n, y1n, y2n);
+
+	if (cmd!="q") { 
+		 square(x1n, x2n, y1n, y2n);
+	}
 
   *x1 = x1n;
   *x2 = x2n;
@@ -310,7 +316,7 @@ int main() {
   struct sockaddr_in serv_addr, cli_addr;
   int pids[4] = {0};
 
-  // background_write();
+  background_write();
   std::cout << "ovde sam\n";
   horizontal_write();
   vertical_write();
@@ -413,8 +419,7 @@ int main() {
 
             std::cout << "main x1: " << x1 << " x2: " << x2 << " y1: "
                     << y1 << " y2: " << y2 << "\n";
-          // clear_section(&frame, first_free);
-          // draw_rect(&frame, first_free, 0, 0);
+         
           close(sockfd);
           sock_write(newsockfd, "Controlling: " + sec_n_to_str(first_free));
           square(x1, x2, y1, y2);
@@ -426,9 +431,9 @@ int main() {
             move_rect(cmd, &x1, &x2, &y1, &y2, first_free);
             std::cout << "main x1: " << x1 << " x2: " << x2 << " y1: " << y1
                       << " y2: " << y2 << "\n";
-            // move_rect(&frame, first_free, cmd, &x_off, &y_off);
+           
           } while (cmd != "q" && cmd != "");
-          // clear_section(&frame, first_free);
+         
           close(newsockfd);
 
           exit(0);
